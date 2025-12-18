@@ -29,4 +29,10 @@ enum class ConfigFlag {
    * and automatic stop when it disconnects.
    */
   AUTO_ENABLE_ON_BT,
+
+  /**
+   * Show debug Toast notifications for Auto Enable on BT feature.
+   * Useful for troubleshooting connection issues.
+   */
+  AUTO_ENABLE_ON_BT_DEBUG_TOASTS,
 }

@@ -54,6 +54,7 @@ import dev.shadoe.delta.api.SoftApSecurityType
 import dev.shadoe.delta.common.components.FadeInExpanded
 import dev.shadoe.delta.common.components.FoldableWrapper
 import dev.shadoe.delta.settings.components.AppRestartDialog
+import dev.shadoe.delta.settings.components.AutoEnableBtDebugToastsField
 import dev.shadoe.delta.settings.components.AutoEnableOnBluetoothField
 import dev.shadoe.delta.settings.components.AutoShutDownTimeOutField
 import dev.shadoe.delta.settings.components.AutoShutdownField
@@ -136,6 +137,8 @@ fun SettingsScreen(
   val taskerIntegrationStatus by
     vm.taskerIntegrationStatus.collectAsState(false)
   val autoEnableOnBtStatus by vm.autoEnableOnBtStatus.collectAsState(false)
+  val autoEnableBtDebugToastsStatus by
+    vm.autoEnableOnBtDebugToastsStatus.collectAsState(false)
   val selectedBtDevice by vm.selectedBtDevice.collectAsState(null)
   val pairedBtDevices by vm.pairedBtDevices.collectAsState(emptyList())
   val exportStatus by vm.exportStatus.collectAsState()
@@ -422,6 +425,16 @@ fun SettingsScreen(
               vm.updateTaskerIntegrationStatus(it)
             },
             onShowTaskerIntegrationInfo = { isTaskerInfoShown = true },
+          )
+        }
+      }
+      item {
+        FadeInExpanded(isAdvancedSettingsEnabled) {
+          AutoEnableBtDebugToastsField(
+            isEnabled = autoEnableBtDebugToastsStatus,
+            onEnabledChange = {
+              vm.updateAutoEnableOnBtDebugToastsStatus(it)
+            },
           )
         }
       }

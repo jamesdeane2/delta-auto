@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 private data class SettingsFlags(
   val insecureReceiverEnabled: Boolean,
   val autoEnableOnBtEnabled: Boolean,
+  val autoEnableOnBtDebugToasts: Boolean,
 )
 
 @HiltViewModel
@@ -50,6 +51,7 @@ constructor(
       SettingsFlags(
         insecureReceiverEnabled = false,
         autoEnableOnBtEnabled = false,
+        autoEnableOnBtDebugToasts = false,
       )
     )
   private val _importStatus = MutableStateFlow(ImportStatus.Idle)
@@ -84,6 +86,9 @@ constructor(
     viewModelScope.launch {
       updateTaskerIntegrationStatus(flagsRepository.isInsecureReceiverEnabled())
       updateAutoEnableOnBtStatus(flagsRepository.isAutoEnableOnBtEnabled())
+      updateAutoEnableOnBtDebugToastsStatus(
+        flagsRepository.isAutoEnableOnBtDebugToastsEnabled()
+      )
       _selectedBtDevice.value = bluetoothRepository.getSelectedDevice()
     }
   }
@@ -93,6 +98,10 @@ constructor(
 
   @OptIn(ExperimentalCoroutinesApi::class)
   val autoEnableOnBtStatus = _flags.mapLatest { it.autoEnableOnBtEnabled }
+
+  @OptIn(ExperimentalCoroutinesApi::class)
+  val autoEnableOnBtDebugToastsStatus =
+    _flags.mapLatest { it.autoEnableOnBtDebugToasts }
 
   @OptIn(ExperimentalTime::class)
   fun convertUnixTSToTime(timestamp: Long) =
@@ -243,6 +252,10 @@ constructor(
     _flags.update { it.copy(autoEnableOnBtEnabled = enabled) }
   }
 
+  fun updateAutoEnableOnBtDebugToastsStatus(enabled: Boolean) {
+    _flags.update { it.copy(autoEnableOnBtDebugToasts = enabled) }
+  }
+
   fun loadPairedBluetoothDevices() {
     _pairedBtDevices.value = bluetoothRepository.getPairedDevices()
   }
@@ -289,6 +302,9 @@ constructor(
       )
       flagsRepository.setAutoEnableOnBtStatus(
         _flags.value.autoEnableOnBtEnabled
+      )
+      flagsRepository.setAutoEnableOnBtDebugToastsStatus(
+        _flags.value.autoEnableOnBtDebugToasts
       )
     }
     return softApController.updateSoftApConfiguration(_config.value)

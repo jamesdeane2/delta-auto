@@ -146,6 +146,9 @@
     <string name="bt_device_selection_button">Select Device</string>
     <string name="bt_permission_required">Bluetooth permission required</string>
     <string name="bt_permission_rationale">This permission is needed to detect paired Bluetooth devices and monitor connections.</string>
+    <string name="auto_enable_bt_debug_toasts_field_icon">Debug Toasts Icon</string>
+    <string name="auto_enable_bt_debug_toasts_field_title">Show Debug Toasts</string>
+    <string name="auto_enable_bt_debug_toasts_field_desc">Display notification messages when Auto Enable on BT triggers. Useful for troubleshooting.</string>
     <string name="presets_setting">Presets</string>
     <string name="presets_field_icon">Presets icon</string>
     <string name="presets_field_desc">Save and restore various hotspot settings for quickly switching between them.</string>

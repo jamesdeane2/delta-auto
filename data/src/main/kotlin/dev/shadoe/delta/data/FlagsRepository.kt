@@ -30,5 +30,16 @@ class FlagsRepository @Inject constructor(private val flagsDao: FlagsDao) {
       Flag(flag = ConfigFlag.AUTO_ENABLE_ON_BT.ordinal, value = enabled)
     )
 
+  suspend fun isAutoEnableOnBtDebugToastsEnabled() =
+    flagsDao.getFlag(ConfigFlag.AUTO_ENABLE_ON_BT_DEBUG_TOASTS.ordinal) == true
+
+  suspend fun setAutoEnableOnBtDebugToastsStatus(enabled: Boolean) =
+    flagsDao.setFlag(
+      Flag(
+        flag = ConfigFlag.AUTO_ENABLE_ON_BT_DEBUG_TOASTS.ordinal,
+        value = enabled,
+      )
+    )
+
   suspend fun debugDumpFlags() = flagsDao.dump()
 }
