@@ -1,10 +1,12 @@
-name: Daily jobs
-permissions:
-  contents: read
-  pull-requests: write
+# Disabled for fork - don't need stale bot or Crowdin sync
+# name: Daily jobs
+# permissions:
+#   contents: read
+#   pull-requests: write
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  workflow_dispatch:  # Manual trigger only
+  # schedule:
+  #   - cron: '0 0 * * *'
 jobs:
   stale:
     name: Mark issues/PRs stale after 60 days

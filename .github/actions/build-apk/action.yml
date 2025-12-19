@@ -45,9 +45,6 @@ runs:
           exit 1
         fi
         echo $SIGN_BASE64 | base64 -d > app/sign.json
-    - name: Build debug APK
-      shell: bash
-      run: ./gradlew assembleDebugKeySignedDebug
     - name: Build debug key signed release APK
       if: inputs.sign-release == 'false'
       shell: bash
@@ -56,21 +53,33 @@ runs:
       if: inputs.sign-release == 'true'
       shell: bash
       run: ./gradlew assembleDefaultKeySignedRelease
-    - name: Move APKs to root
+    - name: Rename and move APK with git hash and date
       shell: bash
       run: |
-        DEBUG_APK_PATH="app/build/outputs/apk/debugKeySigned/debug/app-debugKeySigned-debug.apk"
+        # Get short git hash and date
+        GIT_HASH=$(git rev-parse --short HEAD)
+        BUILD_DATE=$(date +'%Y%m%d')
+        APK_NAME="delta-auto-${BUILD_DATE}-${GIT_HASH}.apk"
+        ARTIFACT_NAME="delta-auto-${BUILD_DATE}-${GIT_HASH}"
+        
         UNSIGNED_RELEASE_APK_PATH="app/build/outputs/apk/debugKeySigned/release/app-debugKeySigned-release.apk"
         SIGNED_RELEASE_APK_PATH="app/build/outputs/apk/defaultKeySigned/release/app-defaultKeySigned-release.apk"
-        [ -e "$DEBUG_APK_PATH" ] && mv "$DEBUG_APK_PATH" "app-debug.apk"
-        [ -e "$UNSIGNED_RELEASE_APK_PATH" ] && mv "$UNSIGNED_RELEASE_APK_PATH" \
-          "app-release.apk"
-        [ -e "$SIGNED_RELEASE_APK_PATH" ] && mv "$SIGNED_RELEASE_APK_PATH" \
-          "app-release.apk"
+        
+        if [ -e "$UNSIGNED_RELEASE_APK_PATH" ]; then
+          mv "$UNSIGNED_RELEASE_APK_PATH" "$APK_NAME"
+          echo "APK_FILENAME=$APK_NAME" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+        fi
+        if [ -e "$SIGNED_RELEASE_APK_PATH" ]; then
+          mv "$SIGNED_RELEASE_APK_PATH" "$APK_NAME"
+          echo "APK_FILENAME=$APK_NAME" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+        fi
     - name: Upload APK
+      id: upload
       uses: actions/upload-artifact@v4
       with:
-        name: app
-        path: app-*.apk
+        name: delta-auto-apk
+        path: delta-auto-*.apk
         retention-days: 7
         if-no-files-found: error

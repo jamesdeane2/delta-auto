@@ -105,20 +105,21 @@ jobs:
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           gradle-action: dependency-submission
-  upload-strings-to-crowdin:
-    name: Upload string to crowdin
-    runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-      - name: Sync with crowdin
-        uses: crowdin/github-action@v2
-        with:
-          upload_sources: true
-          upload_translations: false
-          download_translations: false
-          create_pull_request: false
-        env:
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PAT }}
+  # Disabled Crowdin translation upload - not needed for fork
+  # upload-strings-to-crowdin:
+  #   name: Upload string to crowdin
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name != 'pull_request'
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
+  #     - name: Sync with crowdin
+  #       uses: crowdin/github-action@v2
+  #       with:
+  #         upload_sources: true
+  #         upload_translations: false
+  #         download_translations: false
+  #         create_pull_request: false
+  #       env:
+  #         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+  #         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PAT }}
